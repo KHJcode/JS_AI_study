@@ -20,8 +20,17 @@
     const compileParam = { optimizer: tf.train.adam(), loss: tf.losses.meanSquaredError };
     model.compile(compileParam);
 
-    const fitParam = { epochs: 100 };
-    const repeat = 200;
+    const fitParam = {
+      epochs: 100,
+      callbacks: {
+        onEpochEnd: (epoch, logs) => {
+          if (epoch / 10 === 0) {
+            console.log(logs, 'RMSE: ', Math.sqrt(logs.loss));
+          }
+        }
+      }
+    };
+    const repeat = 101;
 
     (async () => {
       for (let i = 0; i < repeat; i++) {
